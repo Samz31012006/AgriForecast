@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppShell } from "@/components/app-shell";
 import { PredictionForm } from "@/components/prediction-form";
 import { PredictionResult } from "@/components/prediction-result";
@@ -11,6 +11,13 @@ export default function PredictPage() {
   const [inputData, setInputData] = useState<PredictRequest | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+ 
+  // Scroll to top when result appears
+  useEffect(() => {
+    if (result) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [result]);
 
   const handleSubmit = async (data: PredictRequest) => {
     setIsLoading(true);

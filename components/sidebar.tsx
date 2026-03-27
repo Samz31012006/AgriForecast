@@ -18,7 +18,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <aside className={`fixed lg:sticky top-0 left-0 h-screen w-68 flex-shrink-0 border-r border-[var(--color-gold)]/20 bg-[var(--color-primary-900)] flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.3)] z-50 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-      <div className="p-8 pb-10 flex items-center justify-between">
+      <div className="p-6 md:p-8 pb-6 md:pb-10 flex items-center justify-between">
         <Link href="/" className="block group">
           <h1 className="text-2xl font-black text-[#E8F0E4] tracking-tighter transition-all duration-300 group-hover:tracking-tight">
             Agri<span className="text-[var(--color-gold)]">Forecast</span>
@@ -34,7 +34,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </button>
       </div>
 
-      <nav className="flex-1 px-5 space-y-3">
+      <nav className="flex-1 px-5 space-y-1.5 md:space-y-3 overflow-y-auto">
         <p className="px-4 text-[9px] font-black text-[var(--color-gold)]/60 uppercase tracking-[0.3em] mb-4">Core Navigation</p>
         {mainLinks.map((link) => {
           const isActive = pathname === link.href;
@@ -58,7 +58,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-6 space-y-5 bg-[var(--color-primary-800)]/20 border-t border-[var(--color-gold)]/10">
+      <div className="p-4 md:p-6 space-y-4 md:space-y-5 bg-[var(--color-primary-800)]/20 border-t border-[var(--color-gold)]/10 mt-auto">
         <div className="glass-dark rounded-lg p-4 border border-[var(--color-gold)]/30 shadow-inner">
           <p className="text-[9px] font-black text-[var(--color-gold)] uppercase tracking-[0.25em] mb-2 pl-0.5 opacity-90">System Integrity</p>
           <div className="flex items-center gap-2.5">

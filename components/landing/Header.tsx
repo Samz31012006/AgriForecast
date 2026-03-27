@@ -54,21 +54,23 @@ const Header: React.FC = () => {
               </a>
             ))}
           </nav>
+          
+          <div className="flex items-center gap-3">
+            {/* Global CTA - Always visible but smaller on mobile */}
+            <a 
+              href="/login" 
+              className="btn-gold flex items-center gap-2 px-4 md:px-6 py-2 md:py-2.5 text-[0.6rem] md:text-[0.65rem] rounded-sm uppercase tracking-widest font-bold shadow-2xl"
+            >
+              <span>Get Started</span>
+            </a>
 
-          {/* Global CTA */}
-          <a 
-            href="/login" 
-            className="btn-gold hidden md:flex items-center gap-2 px-6 py-2.5 text-[0.65rem] rounded-sm uppercase tracking-widest font-bold shadow-2xl"
-          >
-            <span>Get Started</span>
-          </a>
-
-          {/* Mobile hamburger */}
-          <button className="lg:hidden flex flex-col gap-1.5 p-2" onClick={() => setMenuOpen(!menuOpen)}>
-            <div className="w-5 h-px bg-gold transition-all" style={{ transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
-            <div className="w-5 h-px bg-gold transition-all" style={{ opacity: menuOpen ? 0 : 1 }} />
-            <div className="w-5 h-px bg-gold transition-all" style={{ transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
-          </button>
+            {/* Mobile hamburger */}
+            <button className="lg:hidden flex flex-col gap-1.5 p-2 bg-[var(--color-primary-800)]/40 rounded-lg border border-gold/20" onClick={() => setMenuOpen(!menuOpen)}>
+              <div className="w-5 h-px bg-gold transition-all" style={{ transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+              <div className="w-5 h-px bg-gold transition-all" style={{ opacity: menuOpen ? 0 : 1 }} />
+              <div className="w-5 h-px bg-gold transition-all" style={{ transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu - Animated slide down */}
