@@ -1,10 +1,20 @@
 import sys
 import os
 
-# Ensure the project root is in the path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Absolute path to the directory containing this file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
 
-from backend.main import app
+try:
+    from backend.main import app
+except ImportError:
+    # Fallback for some specific cloud environments where we might already be inside backend
+    try:
+        from main import app
+    except ImportError as e:
+        print(f"CRITICAL: Could not find app. sys.path: {sys.path}")
+        raise e
 
 if __name__ == "__main__":
     import uvicorn
