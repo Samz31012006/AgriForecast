@@ -1,20 +1,28 @@
 import logging
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from backend.advisory_service import generate_advisory
 from backend.model_service import predict_yield, predict_price
 from backend.schemas import PredictRequest, PredictResponse
+from backend.config import settings
+from backend.security import verify_firebase_token
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="AgriForecast Backend", version="0.2.0")
+# Initialize Rate Limiter
+limiter = Limiter(key_func=get_remote_address)
+app = FastAPI(title="AgriForecast Backend", version="0.3.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS — allow all origins for deployment flexibility
+# CORS — restricted to allowed origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,7 +42,11 @@ def health() -> dict:
 
 
 @app.post("/predict", response_model=PredictResponse)
-def predict(request: PredictRequest) -> PredictResponse:
+@limiter.limit(settings.rate_limit_default)
+def predict(
+    request: PredictRequest, 
+    token: dict = Depends(verify_firebase_token)
+) -> PredictResponse:
     # Yield prediction
     yield_pred = predict_yield(request.dict())
 

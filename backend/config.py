@@ -34,6 +34,14 @@ class Settings(BaseModel):
     model_path: Path = Field(
         default=Path(ENV_VALUES.get("MODEL_PATH", BASE_DIR / "models"))
     )
+    # Security Settings
+    firebase_project_id: str | None = Field(
+        default=ENV_VALUES.get("NEXT_PUBLIC_FIREBASE_PROJECT_ID") or None
+    )
+    cors_origins: list[str] = Field(
+        default=ENV_VALUES.get("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001").split(",")
+    )
+    rate_limit_default: str = Field(default="10/minute")
 
 
 settings = Settings()

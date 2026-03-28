@@ -30,10 +30,19 @@ export interface PredictResponse {
 
 export async function predict(data: PredictRequest): Promise<PredictResponse> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  
+  // Get the current user's ID token for authentication
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("You must be logged in to perform predictions.");
+  }
+  const token = await user.getIdToken();
+
   const response = await fetch(`${apiUrl}/predict`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify(data),
   });
