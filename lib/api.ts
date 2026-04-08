@@ -48,7 +48,14 @@ export async function predict(data: PredictRequest): Promise<PredictResponse> {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch prediction. The service might be unavailable.");
+    let errorMessage = "The service might be unavailable.";
+    try {
+      const errorData = await response.json();
+      errorMessage = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+    } catch (e) {
+      errorMessage = response.statusText;
+    }
+    throw new Error(`Error ${response.status}: ${errorMessage}`);
   }
 
   return response.json();

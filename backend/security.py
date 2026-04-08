@@ -45,6 +45,6 @@ async def verify_firebase_token(authorization: Optional[str] = Header(None)) -> 
         logger.error(f"Firebase token verification failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
+            detail=f"Token verification failed: {str(e)}",
             headers={"WWW-Authenticate": "Bearer"},
         )
