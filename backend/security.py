@@ -13,14 +13,12 @@ logger = logging.getLogger(__name__)
 # Fallback to local project ID for verification if possible
 try:
     if not firebase_admin._apps:
-        if settings.firebase_project_id:
-            logger.info(f"Initializing Firebase Admin for project: {settings.firebase_project_id}")
-            # Explicitly set the project ID for verification
-            firebase_admin.initialize_app(options={
-                'projectId': settings.firebase_project_id
-            })
-        else:
-            logger.warning("Firebase Project ID not found in settings. Auth will fail.")
+        project_id = settings.firebase_project_id or "agriforecast01"
+        logger.info(f"Initializing Firebase Admin for project: {project_id}")
+        # Explicitly set the project ID for verification
+        firebase_admin.initialize_app(options={
+            'projectId': project_id
+        })
 except Exception as e:
     logger.error(f"Failed to initialize Firebase Admin: {e}")
 
