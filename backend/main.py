@@ -19,14 +19,22 @@ app = FastAPI(title="AgriForecast Backend", version="0.3.0")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# Allow all origins if '*' is present, but handle the credentials restriction
-cors_origins = settings.cors_origins
-allow_all = "*" in cors_origins
+# Allow explicit origins for Vercel and Localhost to ensure credentials work
+allowed_origins = [
+    "https://agriforecastml.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:3001"
+]
+
+# Add any additional origins from environment variables
+if settings.cors_origins:
+    for origin in settings.cors_origins:
+        if origin and origin not in allowed_origins:
+            allowed_origins.append(origin)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[] if allow_all else cors_origins,
-    allow_origin_regex=".*" if allow_all else None,
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
