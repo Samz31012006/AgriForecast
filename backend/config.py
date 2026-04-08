@@ -27,21 +27,25 @@ ENV_PATH = BASE_DIR / ".env"
 ENV_VALUES = _load_dotenv(ENV_PATH)
 
 
+import os
+
 class Settings(BaseModel):
     google_api_key: str | None = Field(
-        default=ENV_VALUES.get("GOOGLE_API_KEY") or None
+        default=os.getenv("GOOGLE_API_KEY") or ENV_VALUES.get("GOOGLE_API_KEY")
     )
     model_path: Path = Field(
-        default=Path(ENV_VALUES.get("MODEL_PATH", BASE_DIR / "models"))
+        default=Path(os.getenv("MODEL_PATH") or ENV_VALUES.get("MODEL_PATH", str(BASE_DIR / "models")))
     )
     # Security Settings
     firebase_project_id: str | None = Field(
-        default=ENV_VALUES.get("NEXT_PUBLIC_FIREBASE_PROJECT_ID") or None
+        default=os.getenv("NEXT_PUBLIC_FIREBASE_PROJECT_ID") or ENV_VALUES.get("NEXT_PUBLIC_FIREBASE_PROJECT_ID")
     )
     cors_origins: list[str] = Field(
-        default=ENV_VALUES.get("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001").split(",")
+        default=(os.getenv("CORS_ORIGINS") or ENV_VALUES.get("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001")).split(",")
     )
-    rate_limit_default: str = Field(default="10/minute")
+    rate_limit_default: str = Field(
+        default=os.getenv("RATE_LIMIT_DEFAULT") or ENV_VALUES.get("RATE_LIMIT_DEFAULT", "10/minute")
+    )
 
 
 settings = Settings()
