@@ -13,15 +13,14 @@ logger = logging.getLogger(__name__)
 # Fallback to local project ID for verification if possible
 try:
     if not firebase_admin._apps:
-        # If NEXT_PUBLIC_FIREBASE_PROJECT_ID is provided, use it
         if settings.firebase_project_id:
             logger.info(f"Initializing Firebase Admin for project: {settings.firebase_project_id}")
-            # Note: For full functionality, a service account is recommended.
-            # But for simple ID token verification, having the project ID often suffices 
-            # if default credentials are found in the environment.
-            firebase_admin.initialize_app()
+            # Explicitly set the project ID for verification
+            firebase_admin.initialize_app(options={
+                'projectId': settings.firebase_project_id
+            })
         else:
-            logger.warning("Firebase Project ID not found in settings. Auth might fail.")
+            logger.warning("Firebase Project ID not found in settings. Auth will fail.")
 except Exception as e:
     logger.error(f"Failed to initialize Firebase Admin: {e}")
 

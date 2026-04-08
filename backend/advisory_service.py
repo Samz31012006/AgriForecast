@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 from backend.config import settings
 
 
@@ -18,9 +18,8 @@ def generate_advisory(
         return fallback
 
     try:
-        genai.configure(api_key=settings.google_api_key)
-        model = genai.GenerativeModel("models/gemma-3-27b-it")
-
+        client = genai.Client(api_key=settings.google_api_key)
+        
         prompt = (
             f"You are an agricultural advisor helping Indian farmers.\n\n"
             f"Crop: {crop}\n"
@@ -32,7 +31,11 @@ def generate_advisory(
             "Return text only."
         )
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
         return response.text.strip()
-    except Exception:
+    except Exception as e:
+        print(f"GenAI Error: {e}")
         return fallback

@@ -4,11 +4,11 @@ pandas
 joblib
 xgboost
 prophet
-google-generativeai
 python-dotenv
 pydantic
 pydantic-settings
 python-multipart
-scikit-learn
+scikit-learn==1.7.2
 slowapi
 firebase-admin
+google-genai
