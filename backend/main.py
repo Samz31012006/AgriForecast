@@ -41,6 +41,11 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def read_root():
+    return {"message": "AgriForecast API is running"}
+
+
 @app.get("/health")
 def health() -> dict:
     from backend.model_service import model_store
