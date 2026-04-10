@@ -1,5 +1,5 @@
 import logging
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -56,21 +56,22 @@ def health() -> dict:
 @app.post("/predict", response_model=PredictResponse)
 @limiter.limit(settings.rate_limit_default)
 def predict(
-    request: PredictRequest, 
+    request: Request,
+    payload: PredictRequest, 
     token: dict = Depends(verify_firebase_token)
 ) -> PredictResponse:
     # Yield prediction
-    yield_pred = predict_yield(request.dict())
+    yield_pred = predict_yield(payload.dict())
 
     # Price prediction
-    price_pred_info = predict_price(request.dict())
+    price_pred_info = predict_price(payload.dict())
 
     # Advisory
     advisory = generate_advisory(
         yield_pred,
         price_pred_info["price_prediction"],
         price_pred_info["price_trend"],
-        request.crop,
+        payload.crop,
     )
 
     return PredictResponse(
